@@ -21,7 +21,7 @@ module.exports = (grunt) ->
 
     options = @options()
     options.i18n = {} unless options.i18n
-    { locales, namespace, localeExtension, defaultExt } = options.i18n
+    { locales, namespace, localeExtension, defaultExt, defaultLocale } = options.i18n
 
     # set default options
     namespace = '$i18n' unless namespace?
@@ -65,13 +65,14 @@ module.exports = (grunt) ->
         opts.data = _.extend opts.data, readFile filepath
         opts.data[namespace] = readFile filepath
         opts.data.$localeName = locale
+        opts.data.$localePath = if locale == defaultLocale then "" else "/#{locale}"
 
         # translate output destination for each language
         config.files = _.cloneDeep(@files).map (file) ->
           if localeExtension
             addLocaleExtensionDest file, locale, defaultExt
           else
-            addLocaleDirnameDest file, locale, defaultExt
+            addLocaleDirnameDest file, locale, defaultExt, defaultLocale
           file
     else
       grunt.log.ok 'Locales files not found. Nothing to translate'
@@ -115,8 +116,11 @@ module.exports = (grunt) ->
 
     file.dest = file.orig.dest = dest
 
-  addLocaleDirnameDest = (file, locale, outputExt) ->
+  addLocaleDirnameDest = (file, locale, outputExt, defaultLocale) ->
     throw new TypeError 'Missing the template destination path' unless file.dest
+
+    if defaultLocale? && defaultLocale == locale
+      locale = ""
 
     if ext = getExtension file.dest
       dest = path.join path.dirname(file.dest), locale, path.basename(file.dest, ext) + setExtension ext

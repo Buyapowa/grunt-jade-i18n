@@ -91,6 +91,14 @@ Default: `$i18n`
 
 Namespace to expose translation keys in Jade template
 
+#### defaultLocale
+Type: `string`
+Default: `null`
+
+If this is set, translations for the default locale will be put in the base directory,
+rather than in it's own directory. This also sets a variable that can be used for
+setting link paths `$localePath` which will be a blank string for the `defaultLocale`
+
 #### localeExtension
 Type: `boolean`
 Default: `false`
@@ -195,4 +203,3 @@ Released under MIT license
 [travis]: https://travis-ci.org/AdesisNetlife/grunt-jade-i18n
 [npm]: https://www.npmjs.org/package/grunt-jade-i18n
 [dependencies]: https://gemnasium.com/AdesisNetlife/grunt-jade-i18n
-
